@@ -78,13 +78,13 @@ const SignUpForm = () => {
               <Form.Control
                 className={styles.Input}
                 type="password"
-                placeholder="password1"
+                placeholder="password"
                 name="password1"
                 value={password1}
                 onChange={handleChange}
               />
             </Form.Group>
-            {errors.password1.map((message, idx) => (
+            {errors.password1?.map((message, idx) => (
               <Alert variant="warning" key={idx}>
                 {message}
               </Alert>
