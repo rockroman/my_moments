@@ -6,6 +6,7 @@ import Avatar from "../../components/Avatar";
 import { useState } from "react";
 import axios from "axios";
 import { axiosRes } from "../../api/axiosDefaults";
+import { MoreDropdown } from "../../components/MoreDropdown";
 const Post = (props) => {
   const {
     id,
@@ -15,7 +16,7 @@ const Post = (props) => {
     created_at,
     updated_at,
     likes_count,
-    like_id,
+    likes_id,
     title,
     content,
     image,
@@ -27,6 +28,19 @@ const Post = (props) => {
   const is_owner = currentUser?.username === owner;
 
   const history = useHistory();
+
+  const handleDelete = async () => {
+    try {
+      await axiosRes.delete(`/post/${id}`);
+      history.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEdit = async () => {
+    history.push(`/post/${id}/edit`);
+  };
   const handleLike = async () => {
     try {
       const { data } = await axiosRes.post("/likes/", { post: id });
@@ -34,7 +48,7 @@ const Post = (props) => {
         ...prevPosts,
         results: prevPosts.results.map((post) => {
           return post.id === id
-            ? { ...post, likes_count: post.likes_count + 1, like_id: data.id }
+            ? { ...post, likes_count: post.likes_count + 1, likes_id: data.id }
             : post;
         }),
       }));
@@ -45,12 +59,12 @@ const Post = (props) => {
 
   const handleUnlike = async () => {
     try {
-      await axiosRes.delete(`/likes/${like_id}/`);
+      await axiosRes.delete(`/likes/${likes_id}/`);
       setPosts((prevPosts) => ({
         ...prevPosts,
         results: prevPosts.results.map((post) => {
           return post.id === id
-            ? { ...post, likes_count: post.likes_count - 1, like_id: null }
+            ? { ...post, likes_count: post.likes_count - 1, likes_id: null }
             : post;
         }),
       }));
@@ -67,7 +81,12 @@ const Post = (props) => {
           </Link>
           <div className="d-flex align-items-center">
             <span>{updated_at}</span>
-            {is_owner && postPage && "..."}
+            {is_owner && postPage && (
+              <MoreDropdown
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            )}
           </div>
         </Media>
       </Card.Body>
@@ -85,7 +104,7 @@ const Post = (props) => {
             >
               <i className="far fa-heart" />
             </OverlayTrigger>
-          ) : like_id ? (
+          ) : likes_id ? (
             <span onClick={handleUnlike}>
               <i className={`fas fa-heart ${styles.Heart}`} />
             </span>
