@@ -16,6 +16,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useRedirect } from "../../hooks/useRedirect";
 
 const SignUpForm = () => {
   const [signUpData, setSignUpData] = useState({
@@ -23,6 +24,8 @@ const SignUpForm = () => {
     password1: "",
     password2: "",
   });
+
+  useRedirect("loggedIn");
 
   const [errors, setErrors] = useState({});
 

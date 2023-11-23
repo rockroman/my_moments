@@ -15,11 +15,13 @@ import { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useSetCurrentUser } from "../../context/CurrentUserContext";
+import { useRedirect } from "../../hooks/useRedirect";
 
 function SignInform() {
   //   Add your component logic here
 
   const setCurrentUser = useSetCurrentUser();
+  useRedirect("loggedIn");
 
   const [signInData, setSignInData] = useState({
     username: "",
@@ -41,7 +43,7 @@ function SignInform() {
       const { data } = await axios.post("/dj-rest-auth/login/", signInData);
       console.log(data);
       setCurrentUser(data.user);
-      history.push("/");
+      history.goBack();
     } catch (error) {
       console.log(error);
       setErrors(error.response?.data);
