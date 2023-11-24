@@ -9,7 +9,7 @@ import NoResult from "../../assets/no-results.png";
 import appStyles from "../../App.module.css";
 import styles from "../../styles/PostsPage.module.css";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
-import axios from "axios";
+// import axios from "axios";
 import { axiosRes, axiosReq } from "../../api/axiosDefaults";
 import Post from "./Post";
 import Asset from "../../components/Asset";
@@ -17,11 +17,13 @@ import { FormControl } from "react-bootstrap";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { fetchMoreData } from "../../utils/Utils";
 import PopularProfiles from "../profiles/PopularProfiles";
+import { useCurrentUser } from "../../context/CurrentUserContext";
 
 function PostsPage({ message, filter = "" }) {
   const [posts, setPosts] = useState({ results: [] });
   const [isLoaded, setIsLoaded] = useState(false);
   const { pathname } = useLocation();
+  const currentUser = useCurrentUser();
 
   const [query, setQuery] = useState("");
 
@@ -42,7 +44,7 @@ function PostsPage({ message, filter = "" }) {
     return () => {
       clearTimeout(timer);
     };
-  }, [filter, query, pathname]);
+  }, [filter, query, pathname,currentUser]);
 
   return (
     <Row className="h-100">
